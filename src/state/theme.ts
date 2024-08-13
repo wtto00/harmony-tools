@@ -2,25 +2,20 @@ import { reactive } from "vue";
 
 export const state = reactive({
   scheme: "" as ColorScheme,
-  mediaQueryList: {} as MediaQueryList,
+  mediaQueryList: window.matchMedia("(prefers-color-scheme: dark)"),
   inited: false,
+  isDark: false,
 });
 
 type ColorScheme = "OS" | "Dark" | "Light";
 
 /**
- * 判断主题设置是否合法
+ * 每次打开都是默认的跟随系统的主题。
+ * 第一次初始化，不会加载动画
  */
-function isColorScheme(color: string): color is ColorScheme {
-  return color === "OS" || color === "Dark" || color === "Light";
-}
-
 export function initTheme() {
-  const localColorScheme = localStorage.getItem("colorScheme") ?? "OS";
-  const colorScheme = isColorScheme(localColorScheme) ? localColorScheme : "OS";
   state.mediaQueryList = window.matchMedia("(prefers-color-scheme: dark)");
-
-  void setColorScheme(colorScheme);
+  void setColorScheme("OS");
 }
 function isDark() {
   return document.documentElement.classList.contains("dark");
@@ -36,7 +31,6 @@ function setTheme(event?: MouseEvent) {
     return;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
   const transition = document.startViewTransition(() => {
     toggleDark();
   });
@@ -66,6 +60,7 @@ function setTheme(event?: MouseEvent) {
 }
 function toggleDark() {
   document.documentElement.classList.toggle("dark");
+  state.isDark = document.documentElement.classList.contains("dark");
 }
 function autoSwitch() {
   setTheme();
@@ -84,17 +79,15 @@ function unlistenDark() {
     state.mediaQueryList.removeEventListener("change", autoSwitch);
   }
 }
-async function setColorScheme(scheme: ColorScheme, event?: MouseEvent) {
-  localStorage.setItem("colorScheme", scheme);
+export async function setColorScheme(scheme: ColorScheme, event?: MouseEvent) {
   state.scheme = scheme;
 
-  let willDark: boolean;
   const currentIsDark = isDark();
 
   switch (scheme) {
     case "OS":
       // 这样写其实是优先 Light
-      willDark = state.mediaQueryList.matches;
+      const willDark = state.mediaQueryList.matches;
       if (willDark) {
         if (!currentIsDark) setTheme(event);
       } else {
@@ -104,13 +97,11 @@ async function setColorScheme(scheme: ColorScheme, event?: MouseEvent) {
       listenDark();
       break;
     case "Dark":
-      willDark = true;
       if (!currentIsDark) setTheme(event);
       // 移除监听
       unlistenDark();
       break;
     case "Light":
-      willDark = false;
       if (currentIsDark) setTheme(event);
       unlistenDark();
       break;
