@@ -19,11 +19,16 @@ export async function listTargets() {
   if (output.code) {
     return Promise.reject(output.stderr);
   }
-  const lines = output.stdout.split("\n").filter((item) => item.trim());
+  const lines = output.stdout
+    .split("\n")
+    .map((item) => item.trim())
+    .filter((item) => item);
   const targets: Target[] = [];
-  lines.map((line) => {
+  lines.forEach((line) => {
     const [name, mode, status, host] = line.split(/\t+/);
-    targets.push({ name, mode: mode as TargetMode, status: status as TargetStatus, host });
+    if (status) {
+      targets.push({ name, mode: mode as TargetMode, status: status as TargetStatus, host });
+    }
   });
   return targets;
 }

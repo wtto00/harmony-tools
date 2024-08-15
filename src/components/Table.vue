@@ -32,7 +32,7 @@ defineProps<{
         </th>
         <td class="px-6 py-4">{{ device.mode }}</td>
         <td class="px-6 py-4">
-          <Status :online="device.status === 'Connected'" />
+          <Status :status="device.status" />
         </td>
         <td class="px-6 py-4">{{ device.host }}</td>
         <td class="px-6 py-4 text-right">
