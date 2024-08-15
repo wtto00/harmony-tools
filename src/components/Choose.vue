@@ -11,18 +11,22 @@ function changeFile(e: Event) {
 }
 
 function triggerChoose(e: MouseEvent) {
-  console.log("target", e);
-  // const target = e.target as HTMLDivElement;
-  // console.log("target", target);
-  // const input = target.firstElementChild as HTMLInputElement;
-  // console.log(input);
-  // input.click();
+  const target = e.currentTarget as HTMLDivElement;
+  const input = target.firstElementChild as HTMLInputElement;
+  console.log(input);
+  input.click();
 }
 </script>
 
 <template>
-  <div class="relative" @click.self="triggerChoose">
-    <input class="absolute overflow-hidden -z-1 w-1 h-1 opacity-0" type="file" @change="changeFile" :accept />
+  <div class="relative" @click="triggerChoose">
+    <input
+      class="absolute overflow-hidden -z-1 w-1 h-1 opacity-0"
+      type="file"
+      @change="changeFile"
+      :accept
+      placeholder="choose file"
+    />
     <slot />
   </div>
 </template>

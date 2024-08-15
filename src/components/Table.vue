@@ -1,11 +1,37 @@
 <script lang="ts" setup>
-import type { Target } from "../utils/hdc";
-import Choose from "./Choose.vue";
+import { installApp, type Target } from "../utils/hdc";
 import Status from "./Status.vue";
+import { open } from "@tauri-apps/plugin-dialog";
+import { inject } from "vue";
+import { ALERT_KEY } from "../utils/symbol";
 
 defineProps<{
   data: Target[];
 }>();
+
+const alertMsg = inject(ALERT_KEY);
+
+async function installHap(device: Target) {
+  try {
+    // choose file
+    const selected = await open({
+      title: "选择已签名HAP安装包文件",
+      filters: [
+        {
+          name: "Hap",
+          extensions: ["hap"],
+        },
+      ],
+    });
+    // cancel
+    if (!selected) return;
+
+    const res = await installApp(selected.path, device.name);
+    console.log("installApp:", res);
+  } catch (error) {
+    alertMsg?.("danger", (error as Error).message || "出错了");
+  }
+}
 </script>
 
 <template>
@@ -36,15 +62,14 @@ defineProps<{
         </td>
         <td class="px-6 py-4">{{ device.host }}</td>
         <td class="px-6 py-4 text-right">
-          <Choose accept=".hap">
-            <button
-              v-if="device.status === 'Connected'"
-              type="button"
-              class="px-3 py-2 text-xs font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-            >
-              安装HAP
-            </button>
-          </Choose>
+          <button
+            v-if="device.status === 'Connected'"
+            type="button"
+            class="px-3 py-2 text-xs font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            @click="installHap(device)"
+          >
+            安装HAP
+          </button>
         </td>
       </tr>
     </tbody>

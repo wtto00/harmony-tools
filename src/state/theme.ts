@@ -24,7 +24,7 @@ function isReducedMotion() {
   return window.matchMedia(`(prefers-reduced-motion: reduce)`).matches === true;
 }
 function setTheme(event?: MouseEvent) {
-  const dark = !isDark();
+  const originDark = isDark();
   // 浏览器不支持 或者 浏览器设置了动画缩减 或者 第一次初始化时 不加载动画
   if (!document.startViewTransition || isReducedMotion() || !state.inited) {
     toggleDark();
@@ -48,12 +48,12 @@ function setTheme(event?: MouseEvent) {
     const clipPath = [`circle(0px at ${x}px ${y}px)`, `circle(${endRadius}px at ${x}px ${y}px)`];
     document.documentElement.animate(
       {
-        clipPath: dark ? clipPath : [...clipPath].reverse(),
+        clipPath: originDark ? [...clipPath].reverse() : clipPath,
       },
       {
         duration: 500,
         easing: "ease-in",
-        pseudoElement: dark ? "::view-transition-new(root)" : "::view-transition-old(root)",
+        pseudoElement: originDark ? "::view-transition-old(root)" : "::view-transition-new(root)",
       }
     );
   });

@@ -8,6 +8,9 @@ export default {
       zIndex: {
         "-1": "-1",
       },
+      transitionProperty: {
+        "transform-opacity": "transform, opacity",
+      },
     },
   },
   darkMode: "class",
