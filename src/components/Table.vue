@@ -2,35 +2,27 @@
 import { installApp, type Target } from "../utils/hdc";
 import Status from "./Status.vue";
 import { open } from "@tauri-apps/plugin-dialog";
-import { inject } from "vue";
-import { ALERT_KEY } from "../utils/symbol";
+import { alertMsg } from "../state/alert";
+import { hideLoading, showLoading } from "../state/loading";
 
 defineProps<{
   data: Target[];
 }>();
 
-const alertMsg = inject(ALERT_KEY);
-
 async function installHap(device: Target) {
   try {
-    // choose file
     const selected = await open({
       title: "选择已签名HAP安装包文件",
-      filters: [
-        {
-          name: "Hap",
-          extensions: ["hap"],
-        },
-      ],
+      filters: [{ name: "Hap", extensions: ["hap"] }],
     });
-    // cancel
     if (!selected) return;
-
-    const res = await installApp(selected.path, device.name);
-    console.log("installApp:", res);
+    showLoading("正在安装hap包文件");
+    await installApp(selected.path, device.name);
+    alertMsg("success", "安装成功");
   } catch (error) {
     alertMsg?.("danger", (error as Error).message || "出错了");
   }
+  hideLoading();
 }
 </script>
 

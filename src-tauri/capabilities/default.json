@@ -13,19 +13,7 @@
           "sidecar": true,
           "name": "binaries/hdc",
           "cmd": "",
-          "args": ["list", "targets", "-v"]
-        },
-        {
-          "sidecar": true,
-          "name": "binaries/hdc",
-          "cmd": "",
-          "args": ["shell", "mkdir", { "validator": "\\S+" }]
-        },
-        {
-          "sidecar": true,
-          "name": "binaries/hdc",
-          "cmd": "",
-          "args": ["-t", { "validator": "\\S+" }, "shell", "mkdir", { "validator": "\\S+" }]
+          "args": true
         }
       ]
     },

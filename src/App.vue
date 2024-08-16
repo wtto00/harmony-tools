@@ -1,34 +1,42 @@
 <script setup lang="ts">
-import { provide, reactive, ref } from "vue";
-import { listTargets, type Target } from "./utils/hdc";
+import { ref } from "vue";
+import { installApp, listTargets, type Target } from "./utils/hdc";
 import { initTheme } from "./state/theme";
 import TableHeader from "./components/TableHeader.vue";
 import Table from "./components/Table.vue";
 import Spinner from "./components/Spinner.vue";
 import Header from "./components/Header.vue";
-import type { AlertType } from "./components/Alert.vue";
 import Alert from "./components/Alert.vue";
-import { ALERT_KEY } from "./utils/symbol";
+import { alertMsg } from "./state/alert";
+import { state as loadingState, showLoading, hideLoading } from "./state/loading";
+import { listen } from "@tauri-apps/api/event";
 
-const loading = ref(false);
 const devices = ref<Target[]>([{ name: "TEST", mode: "USB", status: "Connected", host: "localhost" }]);
 
-async function getDevicesList(successAlert?: boolean) {
+/**
+ * 获取连接设备列表
+ * @param isRefresh 标记是点击刷新的操作，还是刚进入页面初始化的操作
+ */
+async function getDevicesList(isRefresh?: boolean) {
   try {
-    loading.value = true;
+    showLoading();
     devices.value = await listTargets();
-    if (successAlert) {
+    if (devices.value.length === 0) {
+      alertMsg("warning", "没有已连接的设备或模拟器", true);
+    } else if (isRefresh) {
       alertMsg("success", "已刷新");
     }
   } catch (error) {
     alertMsg("danger", (error as Error).message || "出错了");
   }
-  loading.value = false;
+  hideLoading();
 }
 void getDevicesList();
 
+// 亮色/暗色主题初始化
 initTheme();
 
+// 屏蔽右键菜单
 if (import.meta.env.PROD) {
   document.body.addEventListener("contextmenu", (e) => {
     e.stopPropagation();
@@ -36,42 +44,43 @@ if (import.meta.env.PROD) {
   });
 }
 
-const alertState = reactive({
-  type: "info" as AlertType,
-  message: "",
-});
-let alertClock: ReturnType<typeof setTimeout>;
-/**
- * @param type 类型
- * @param msg 消息内容
- * @param notAutoClose type为danger时默认不自动关闭，否则默认自动关闭
- */
-function alertMsg(type: AlertType, msg: string, notAutoClose?: boolean) {
-  clearTimeout(alertClock);
-  Object.assign(alertState, {
-    type,
-    message: msg,
-  });
-  if ((type === "danger" && notAutoClose === false) || (type !== "danger" && notAutoClose !== true)) {
-    alertClock = setTimeout(() => {
-      alertState.message = "";
-    }, 2000);
-  }
+// 拖拽文件到窗口
+interface DragDropEventPayload {
+  paths: string[];
+  position: { x: number; y: number };
 }
-provide(ALERT_KEY, alertMsg);
+listen<DragDropEventPayload>("tauri://drag-drop", async (event) => {
+  if (devices.value.filter((device) => device.status === "Connected").length === 0) {
+    alertMsg("warning", "没有可用的已连接设备");
+    return;
+  }
+  if (loadingState.loading) {
+    alertMsg("warning", "正在处理中，请稍后再试");
+    return;
+  }
+  const files = event.payload.paths.filter((file) => file.toLocaleLowerCase().endsWith(".hap"));
+  for (let i = 0; i < files.length; i++) {
+    const file = files[i];
+    const filename = file.substring(file.lastIndexOf("/") + 1);
+    showLoading(`正在安装${filename}`);
+    try {
+      await installApp(file);
+      alertMsg("success", `安装${filename}成功`);
+    } catch (error) {
+      alertMsg("danger", `安装${filename}出错了: ${(error as Error).message || "未知错误"}`);
+    }
+  }
+  hideLoading();
+});
 </script>
 
 <template>
   <Header />
-  <Alert
-    class="fixed top-12 left-1/2 -translate-x-1/2 w-full max-w-xl"
-    :type="alertState.type"
-    v-model:message="alertState.message"
-  />
+  <Alert class="fixed top-12 left-1/2 -translate-x-1/2 w-full max-w-xl" />
   <div class="w-screen h-screen flex pt-12 justify-center items-center bg-white dark:bg-gray-900">
-    <Spinner class="shadow-md" :loading="loading">
-      <TableHeader @refresh="getDevicesList(true)" />
-      <Table :data="devices" />
+    <Spinner class="shadow-md">
+      <TableHeader @refresh="getDevicesList(true)" :class="[loadingState.loading ? 'opacity-20' : '']" />
+      <Table :data="devices" :class="[loadingState.loading ? 'opacity-20' : '']" />
     </Spinner>
   </div>
 </template>
