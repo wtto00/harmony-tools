@@ -4,7 +4,7 @@ export async function hdc(...args: string[]) {
   const command = Command.sidecar("binaries/hdc", args);
   const output = await command.execute();
   // console.log(`hdc ${args.join(" ")}`, output);
-  if (output.code) {
+  if (output.code || output.stderr) {
     return Promise.reject(Error(output.stderr));
   }
   return Promise.resolve(output.stdout);
