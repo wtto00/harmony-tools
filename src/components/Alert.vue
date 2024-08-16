@@ -1,47 +1,47 @@
 <script lang="ts" setup>
-import { computed, ref } from "vue";
-import { state } from "../state/alert";
+import { computed, ref } from 'vue'
+import { state } from '../state/alert'
 
 const colorClass = computed(() => {
   switch (state.type) {
-    case "danger":
-      return "text-red-800 dark:text-red-400 bg-red-50 dark:bg-gray-800";
-    case "success":
-      return "text-green-800 dark:text-green-400 bg-green-50 dark:bg-gray-800";
-    case "warning":
-      return "text-yellow-800 dark:text-yellow-300 bg-yellow-50 dark:bg-gray-800";
-    case "dark":
-      return "text-gray-800 dark:text-gray-300 bg-gray-50 dark:bg-gray-800";
-    case "info":
+    case 'danger':
+      return 'text-red-800 dark:text-red-400 bg-red-50 dark:bg-gray-800'
+    case 'success':
+      return 'text-green-800 dark:text-green-400 bg-green-50 dark:bg-gray-800'
+    case 'warning':
+      return 'text-yellow-800 dark:text-yellow-300 bg-yellow-50 dark:bg-gray-800'
+    case 'dark':
+      return 'text-gray-800 dark:text-gray-300 bg-gray-50 dark:bg-gray-800'
+    case 'info':
     default:
-      return "text-blue-800 dark:text-blue-400 bg-blue-50 dark:bg-gray-800";
+      return 'text-blue-800 dark:text-blue-400 bg-blue-50 dark:bg-gray-800'
   }
-});
+})
 
 const closeColorClass = computed(() => {
   switch (state.type) {
-    case "danger":
-      return "bg-red-50 text-red-500 focus:ring-red-400 hover:bg-red-200 dark:bg-gray-800 dark:text-red-400 dark:hover:bg-gray-700";
-    case "success":
-      return "bg-green-50 text-green-500 focus:ring-green-400 hover:bg-green-200 dark:bg-gray-800 dark:text-green-400 dark:hover:bg-gray-700";
-    case "warning":
-      return "bg-yellow-50 text-yellow-500 focus:ring-yellow-400 hover:bg-yellow-200 dark:bg-gray-800 dark:text-yellow-300 dark:hover:bg-gray-700";
-    case "dark":
-      return "bg-gray-50 text-gray-500 focus:ring-gray-400 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white";
-    case "info":
+    case 'danger':
+      return 'bg-red-50 text-red-500 focus:ring-red-400 hover:bg-red-200 dark:bg-gray-800 dark:text-red-400 dark:hover:bg-gray-700'
+    case 'success':
+      return 'bg-green-50 text-green-500 focus:ring-green-400 hover:bg-green-200 dark:bg-gray-800 dark:text-green-400 dark:hover:bg-gray-700'
+    case 'warning':
+      return 'bg-yellow-50 text-yellow-500 focus:ring-yellow-400 hover:bg-yellow-200 dark:bg-gray-800 dark:text-yellow-300 dark:hover:bg-gray-700'
+    case 'dark':
+      return 'bg-gray-50 text-gray-500 focus:ring-gray-400 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white'
+    case 'info':
     default:
-      return "bg-blue-50 text-blue-500 focus:ring-blue-400 hover:bg-blue-200 dark:bg-gray-800 dark:text-blue-400 dark:hover:bg-gray-700";
+      return 'bg-blue-50 text-blue-500 focus:ring-blue-400 hover:bg-blue-200 dark:bg-gray-800 dark:text-blue-400 dark:hover:bg-gray-700'
   }
-});
+})
 
-const closed = ref(false);
+const closed = ref(false)
 function transitionend(e: TransitionEvent) {
-  if (e.propertyName === "opacity" && getComputedStyle(e.target as HTMLDivElement).opacity === "0") {
-    closed.value = true;
+  if (e.propertyName === 'opacity' && getComputedStyle(e.target as HTMLDivElement).opacity === '0') {
+    closed.value = true
   }
 }
 function close() {
-  state.message = "";
+  state.message = ''
 }
 </script>
 

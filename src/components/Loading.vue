@@ -23,7 +23,7 @@
 
 <script lang="ts" setup>
 defineProps<{
-  color?: string;
-  size?: string;
-}>();
+  color?: string
+  size?: string
+}>()
 </script>

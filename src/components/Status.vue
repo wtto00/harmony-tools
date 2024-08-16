@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { TargetStatus } from "../utils/hdc";
+import { TargetStatus } from '../utils/hdc'
 
 defineProps<{
-  status: TargetStatus;
-}>();
+  status: TargetStatus
+}>()
 </script>
 
 <template>

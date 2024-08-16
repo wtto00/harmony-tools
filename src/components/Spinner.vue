@@ -12,6 +12,6 @@
 </template>
 
 <script lang="ts" setup>
-import Loading from "./Loading.vue";
-import { state } from "../state/loading";
+import Loading from './Loading.vue'
+import { state } from '../state/loading'
 </script>

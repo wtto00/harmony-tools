@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import { setColorScheme, state } from "../state/theme";
+import { setColorScheme, state } from '../state/theme'
 
 function toggleTheme(e: MouseEvent) {
-  setColorScheme(state.isDark ? "Light" : "Dark", e);
+  setColorScheme(state.isDark ? 'Light' : 'Dark', e)
 }
 </script>
 

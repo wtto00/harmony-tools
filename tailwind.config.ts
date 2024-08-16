@@ -1,18 +1,18 @@
-import type { Config } from "tailwindcss";
-import flowbite from "flowbite/plugin";
+import type { Config } from 'tailwindcss'
+import flowbite from 'flowbite/plugin'
 
 export default {
-  content: ["./index.html", "./src/**/*.{vue,js,ts,jsx,tsx}", "./node_modules/flowbite/**/*.js"],
+  content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}', './node_modules/flowbite/**/*.js'],
   theme: {
     extend: {
       zIndex: {
-        "-1": "-1",
+        '-1': '-1',
       },
       transitionProperty: {
-        "transform-opacity": "transform, opacity",
+        'transform-opacity': 'transform, opacity',
       },
     },
   },
-  darkMode: "class",
+  darkMode: 'class',
   plugins: [flowbite],
-} satisfies Config;
+} satisfies Config

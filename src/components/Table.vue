@@ -1,28 +1,28 @@
 <script lang="ts" setup>
-import { installApp, type Target } from "../utils/hdc";
-import Status from "./Status.vue";
-import { open } from "@tauri-apps/plugin-dialog";
-import { alertMsg } from "../state/alert";
-import { hideLoading, showLoading } from "../state/loading";
+import { installApp, type Target } from '../utils/hdc'
+import Status from './Status.vue'
+import { open } from '@tauri-apps/plugin-dialog'
+import { alertMsg } from '../state/alert'
+import { hideLoading, showLoading } from '../state/loading'
 
 defineProps<{
-  data: Target[];
-}>();
+  data: Target[]
+}>()
 
 async function installHap(device: Target) {
   try {
     const selected = await open({
-      title: "选择已签名HAP安装包文件",
-      filters: [{ name: "Hap", extensions: ["hap"] }],
-    });
-    if (!selected) return;
-    showLoading("正在安装hap包文件");
-    await installApp(selected.path, device.name);
-    alertMsg("success", "安装成功");
+      title: '选择已签名HAP安装包文件',
+      filters: [{ name: 'Hap', extensions: ['hap'] }],
+    })
+    if (!selected) return
+    showLoading('正在安装hap包文件')
+    await installApp(selected.path, device.name)
+    alertMsg('success', '安装成功')
   } catch (error) {
-    alertMsg?.("danger", (error as Error).message || "出错了");
+    alertMsg?.('danger', (error as Error).message || '出错了')
   }
-  hideLoading();
+  hideLoading()
 }
 </script>
 

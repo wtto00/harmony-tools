@@ -30,6 +30,6 @@
 
 <script lang="ts" setup>
 defineEmits<{
-  refresh: [];
-}>();
+  refresh: []
+}>()
 </script>
