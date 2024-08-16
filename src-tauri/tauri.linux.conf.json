@@ -1,5 +1,5 @@
 {
   "bundle": {
-    "resources": { "resources/libusb_shared/libusb_shared.so": "libusb_shared.so" }
+    "resources": ["libusb_shared.so"]
   }
 }

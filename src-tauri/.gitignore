@@ -7,3 +7,5 @@
 /gen/schemas
 
 libusb_shared.dylib
+libusb_shared.so
+libusb_shared.dll

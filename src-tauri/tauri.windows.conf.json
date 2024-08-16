@@ -1,5 +1,5 @@
 {
   "bundle": {
-    "resources": { "resources/libusb_shared/libusb_shared.dll": "libusb_shared.dll" }
+    "resources": ["libusb_shared.dll"]
   }
 }
