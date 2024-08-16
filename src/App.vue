@@ -11,7 +11,7 @@ import { alertMsg } from "./state/alert";
 import { state as loadingState, showLoading, hideLoading } from "./state/loading";
 import { listen } from "@tauri-apps/api/event";
 
-const devices = ref<Target[]>([{ name: "TEST", mode: "USB", status: "Connected", host: "localhost" }]);
+const devices = ref<Target[]>([]);
 
 /**
  * 获取连接设备列表
