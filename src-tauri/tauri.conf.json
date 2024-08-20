@@ -1,6 +1,6 @@
 {
-  "productName": "harmony-tools",
-  "version": "0.0.0",
+  "productName": "Harmony Tools",
+  "version": "../package.json",
   "identifier": "io.github.wtto00.tools.harmony",
   "build": {
     "beforeDevCommand": "pnpm dev",
@@ -11,7 +11,7 @@
   "app": {
     "windows": [
       {
-        "title": "harmony-tools",
+        "title": "Harmony Tools",
         "width": 800,
         "height": 600,
         "minWidth": 600,
