@@ -1,5 +1,5 @@
 fn main() {
-    copy_libusb_share();
+    // copy_libusb_share();
 
     tauri_build::build()
 }

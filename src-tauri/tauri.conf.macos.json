@@ -1,5 +1,0 @@
-{
-  "bundle": {
-    "resources": ["libusb_shared.dylib"]
-  }
-}
