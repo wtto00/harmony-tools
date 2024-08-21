@@ -52,11 +52,16 @@ jobs:
       - name: Get release note
         run: echo "RELEASE_NOTE=$(cat src-tauri/RELEASE_NOTE.md)" >> $GITHUB_ENV
 
+      - run: |
+          echo "${{ env.RELEASE_NOTE }}"
+          echo $RELEASE_NOTE
+
       - uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+          RELEASE_NOTE: ${{ env.RELEASE_NOTE }}
         with:
           includeUpdaterJson: true
           updaterJsonPreferNsis: true
