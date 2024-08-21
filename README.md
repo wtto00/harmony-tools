@@ -6,4 +6,4 @@ Tools for HarmonyOS.
 
 ## 功能点
 
-- 安装 HAP 安装包文件
+- 选择 HAP 安装包文件并安装到已连接设备

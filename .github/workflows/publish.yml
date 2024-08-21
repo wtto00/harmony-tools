@@ -49,6 +49,9 @@ jobs:
       - name: install frontend dependencies
         run: pnpm install
 
+      - name: Get release note
+        run: echo "RELEASE_NOTE=$(cat src-tauri/RELEASE_NOTE.md)" >> $GITHUB_ENV
+
       - uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -57,9 +60,9 @@ jobs:
         with:
           includeUpdaterJson: true
           updaterJsonPreferNsis: true
-          tagName: v__VERSION__
+          tagName: 'v__VERSION__'
           releaseName: 'v__VERSION__ 🌈'
-          releaseBody: 'See the assets to download this version and install.'
+          releaseBody: '$RELEASE_NOTE'
           releaseDraft: true
           prerelease: false
           args: ${{ matrix.args }}
