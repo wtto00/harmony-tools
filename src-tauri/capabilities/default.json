@@ -17,7 +17,7 @@
         }
       ]
     },
-    "dialog:allow-open",
+    "dialog:default",
     "updater:default",
     "process:default"
   ]

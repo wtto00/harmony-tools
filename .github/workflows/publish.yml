@@ -62,7 +62,7 @@ jobs:
           updaterJsonPreferNsis: true
           tagName: 'v__VERSION__'
           releaseName: 'v__VERSION__ 🌈'
-          releaseBody: '$RELEASE_NOTE'
+          releaseBody: '${{ env.RELEASE_NOTE }}'
           releaseDraft: true
           prerelease: false
           args: ${{ matrix.args }}
