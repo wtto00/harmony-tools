@@ -1,40 +1,14 @@
 fn main() {
-    // copy_libusb_share();
+    #[cfg(target_os = "windows")]
+    copy_libusb_share();
 
     tauri_build::build()
 }
 
+#[cfg(target_os = "windows")]
 fn copy_libusb_share() {
     use std::{fs, path::Path};
-    let (src, dest) = {
-        #[cfg(all(target_os = "macos", target_arch = "x86_64"))]
-        {
-            (
-                Path::new("resources/libusb_shared/libusb_shared.dylib-x86_64-apple-darwin"),
-                Path::new("libusb_shared.dylib"),
-            )
-        }
-        #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
-        {
-            (
-                Path::new("resources/libusb_shared/libusb_shared.dylib-aarch64-apple-darwin"),
-                Path::new("libusb_shared.dylib"),
-            )
-        }
-        #[cfg(target_os = "windows")]
-        {
-            (
-                Path::new("resources/libusb_shared/libusb_shared.dll"),
-                Path::new("libusb_shared.dll"),
-            )
-        }
-        #[cfg(target_os = "linux")]
-        {
-            (
-                Path::new("resources/libusb_shared/libusb_shared.so"),
-                Path::new("libusb_shared.so"),
-            )
-        }
-    };
+    let src = Path::new("binaries/libusb_shared.dll");
+    let dest = Path::new("libusb_shared.dll");
     fs::copy(src, dest).unwrap();
 }

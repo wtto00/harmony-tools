@@ -1,5 +1,5 @@
 {
   "bundle": {
-    "externalBin": ["binaries/libusb_shared.dylib"]
+    "externalBin": ["binaries/hdc", "binaries/libusb_shared.dylib"]
   }
 }

@@ -1,5 +1,6 @@
 {
   "bundle": {
+    "externalBin": ["binaries/hdc"],
     "resources": ["libusb_shared.dll"],
     "windows": {
       "allowDowngrades": true,

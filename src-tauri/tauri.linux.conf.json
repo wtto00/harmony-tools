@@ -1,5 +1,5 @@
 {
   "bundle": {
-    "resources": ["libusb_shared.so"]
+    "externalBin": ["binaries/hdc", "binaries/libusb_shared.so"]
   }
 }
