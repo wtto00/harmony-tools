@@ -24,7 +24,14 @@
   },
   "bundle": {
     "active": true,
-    "targets": "all",
-    "icon": ["icons/32x32.png", "icons/128x128.png", "icons/128x128@2x.png", "icons/icon.icns", "icons/icon.ico"]
+    "targets": ["dmg", "app", "nsis", "deb", "rpm", "appimage"],
+    "icon": ["icons/32x32.png", "icons/128x128.png", "icons/128x128@2x.png", "icons/icon.icns", "icons/icon.ico"],
+    "createUpdaterArtifacts": true
+  },
+  "plugins": {
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEI5Mjg0M0VCMUNGREY0MTUKUldRVjlQMGM2ME1vdVNWaVU5LzhiOFpiMVgwc3o4cGVmVDRwMXBrWjRTNUFMWk9teWdDS3Y5WHUK",
+      "endpoints": ["https://github.com/wtto00/harmony-tools/releases/latest/download/latest.json"]
+    }
   }
 }
