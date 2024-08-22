@@ -2,7 +2,7 @@
 
 Tools for HarmonyOS.
 
-集成 SDK 为 5.0.3.600 版本，HarmonyOS NEXT Developer Beta3。
+集成 SDK 为 5.0.3.700 版本，HarmonyOS NEXT Developer Beta5。
 
 ## 功能点
 
