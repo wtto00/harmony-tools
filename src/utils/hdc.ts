@@ -31,7 +31,7 @@ export async function listTargets() {
   const targets: Target[] = []
   lines.forEach((line) => {
     const [name, mode, status, host] = line.split(/\t+/)
-    if (status) {
+    if (status === 'Connected' || status === 'Offline') {
       targets.push({ name, mode: mode as TargetMode, status: status as TargetStatus, host })
     }
   })
