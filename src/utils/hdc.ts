@@ -17,6 +17,7 @@ export interface Target {
   mode: TargetMode
   status: TargetStatus
   host: string
+  udid?: string
 }
 
 /**
@@ -32,7 +33,7 @@ export async function listTargets() {
   lines.forEach((line) => {
     const [name, mode, status, host] = line.split(/\t+/)
     if (status === 'Connected' || status === 'Offline') {
-      targets.push({ name, mode: mode as TargetMode, status: status as TargetStatus, host })
+      targets.push({ name, mode: mode as TargetMode, status: status as TargetStatus, host: host === 'unknown...' ? '-' : host })
     }
   })
   return targets
@@ -75,4 +76,18 @@ export async function installApp(hapPath: string, deviceId?: string) {
     default:
       return Promise.reject(Error(result))
   }
+}
+
+/**
+ * 获取已连接的设备安装App
+ * @param hapPath hap安装包文件位置
+ * @param deviceId 已连接设备ID，默认为已连接的第一个设备
+ */
+export async function getUDID(deviceId?: string) {
+  const deviceArgs = deviceId ? ['-t', deviceId] : []
+  const output = (await hdc(...deviceArgs, 'shell', 'bm', 'get', '--udid')).trim()
+  if (output.startsWith('[Fail]')) return Promise.reject(Error(output))
+  const udid = output.split('\n').filter(line => !line.startsWith('udid'))[0]
+  if (!udid) return Promise.reject(Error(`未获取到UDID: ${output}`))
+  return udid
 }
