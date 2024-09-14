@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { provide, ref } from 'vue'
 import { installApp, listTargets, type Target } from './utils/hdc'
 import { initTheme } from './state/theme'
 import TableHeader from './components/TableHeader.vue'
@@ -10,8 +10,20 @@ import Alert from './components/Alert.vue'
 import { alertMsg } from './state/alert'
 import { state as loadingState, showLoading, hideLoading } from './state/loading'
 import { listen } from '@tauri-apps/api/event'
+import { devicesKey, updateDeviceKey } from './utils/keys'
 
 const devices = ref<Target[]>([])
+
+provide(devicesKey, devices)
+provide(updateDeviceKey, (device: Target) => {
+  devices.value.some(item => {
+    if (device.name === item.name) {
+      item = { ...device }
+      return true
+    }
+    return false
+  })
+})
 
 /**
  * 获取连接设备列表
@@ -80,7 +92,7 @@ listen<DragDropEventPayload>('tauri://drag-drop', async (event) => {
   <div class="w-screen h-screen flex pt-12 justify-center items-center bg-white dark:bg-gray-900">
     <Spinner class="shadow-md">
       <TableHeader @refresh="getDevicesList(true)" :class="[loadingState.loading ? 'opacity-20' : '']" />
-      <Table :data="devices" :class="[loadingState.loading ? 'opacity-20' : '']" />
+      <Table :class="[loadingState.loading ? 'opacity-20' : '']" />
     </Spinner>
   </div>
 </template>

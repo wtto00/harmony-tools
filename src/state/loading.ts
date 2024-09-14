@@ -5,7 +5,7 @@ export const state = reactive({
   text: '',
 })
 
-export function showLoading(text?: string) {
+export function showLoading(text: string = '加载中...') {
   Object.assign(state, {
     loading: true,
     text,

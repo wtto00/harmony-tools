@@ -1,13 +1,29 @@
 <script lang="ts" setup>
-import { installApp, type Target } from '../utils/hdc'
+import { getUDID, installApp, type Target } from '../utils/hdc'
 import Status from './Status.vue'
 import { open } from '@tauri-apps/plugin-dialog'
 import { alertMsg } from '../state/alert'
 import { hideLoading, showLoading } from '../state/loading'
+import { inject, ref } from 'vue'
+import { devicesKey } from '../utils/keys'
 
-defineProps<{
-  data: Target[]
-}>()
+const devices = inject(devicesKey, ref([]))
+
+async function showUDID(device: Target) {
+  if (!device.udid) {
+    showLoading()
+    try {
+      const udid = await getUDID(device.name)
+      device.udid = udid
+    } catch (error) {
+      alertMsg('danger', (error as Error).message ?? '获取UDID出错了')
+    }
+    hideLoading()
+  }
+  if (device.udid) {
+    alertMsg('success', device.udid, true)
+  }
+}
 
 async function installHap(device: Target) {
   try {
@@ -17,7 +33,7 @@ async function installHap(device: Target) {
     })
     if (!selected) return
     showLoading('正在安装hap包文件')
-    await installApp(selected.path, device.name)
+    await installApp(selected, device.name)
     alertMsg('success', '安装成功')
   } catch (error) {
     alertMsg?.('danger', (error as Error).message || '出错了')
@@ -41,7 +57,7 @@ async function installHap(device: Target) {
     </thead>
     <tbody>
       <tr
-        v-for="device in data"
+        v-for="device in devices"
         :key="device.name"
         class="bg-white border-b odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
       >
@@ -58,6 +74,14 @@ async function installHap(device: Target) {
             v-if="device.status === 'Connected'"
             type="button"
             class="px-3 py-2 text-xs font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            @click="showUDID(device)"
+          >
+            查看UDID
+          </button>
+          <button
+            v-if="device.status === 'Connected'"
+            type="button"
+            class="ml-2 px-3 py-2 text-xs font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
             @click="installHap(device)"
           >
             安装HAP
