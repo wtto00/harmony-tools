@@ -33,7 +33,7 @@ async function installHap(device: Target) {
     })
     if (!selected) return
     showLoading('正在安装hap包文件')
-    await installApp(selected.path, device.name)
+    await installApp(selected, device.name)
     alertMsg('success', '安装成功')
   } catch (error) {
     alertMsg?.('danger', (error as Error).message || '出错了')
@@ -56,8 +56,11 @@ async function installHap(device: Target) {
       </tr>
     </thead>
     <tbody>
-      <tr v-for="device in devices" :key="device.name"
-        class="bg-white border-b odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+      <tr
+        v-for="device in devices"
+        :key="device.name"
+        class="bg-white border-b odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+      >
         <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
           {{ device.name }}
         </th>
@@ -67,14 +70,20 @@ async function installHap(device: Target) {
         </td>
         <td class="px-6 py-4">{{ device.host }}</td>
         <td class="px-6 py-4 text-right">
-          <button v-if="device.status === 'Connected'" type="button"
+          <button
+            v-if="device.status === 'Connected'"
+            type="button"
             class="px-3 py-2 text-xs font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-            @click="showUDID(device)">
+            @click="showUDID(device)"
+          >
             查看UDID
           </button>
-          <button v-if="device.status === 'Connected'" type="button"
+          <button
+            v-if="device.status === 'Connected'"
+            type="button"
             class="ml-2 px-3 py-2 text-xs font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-            @click="installHap(device)">
+            @click="installHap(device)"
+          >
             安装HAP
           </button>
         </td>
