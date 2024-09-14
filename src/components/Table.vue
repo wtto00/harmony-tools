@@ -13,7 +13,7 @@ async function showUDID(device: Target) {
   if (!device.udid) {
     showLoading()
     try {
-      const udid = await getUDID()
+      const udid = await getUDID(device.name)
       device.udid = udid
     } catch (error) {
       alertMsg('danger', (error as Error).message ?? '获取UDID出错了')
